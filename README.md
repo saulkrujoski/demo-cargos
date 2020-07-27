@@ -2,6 +2,16 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.3.
 
+# Descripción de aspectos generales
+
+El proyecto integra:
+    * Bootstrap 4
+    * Awesome Fonts con la siguiente dirección "https://kit.fontawesome.com/98098a1d91.js" añadido al encabezado del index.html
+    * Se incorporó un globales.ts que contiene una lista de variables generales con ámbito de aplicación "global" para la gestión de alertas.
+    * La URL a la API se encuentra en el fichero environment.prod.ts
+
+
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

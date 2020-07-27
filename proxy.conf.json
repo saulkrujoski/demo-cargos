@@ -1,0 +1,7 @@
+{
+    "/api/*":{
+        "target": "https://stage.sys.meyrnr.misiones.gob.ar",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

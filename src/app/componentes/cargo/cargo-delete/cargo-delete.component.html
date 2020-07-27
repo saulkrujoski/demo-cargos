@@ -1,0 +1,20 @@
+<!-- Vista para eliminar a un Paciente -->
+<div class="alert alert-warning mt-2" role="alert">
+    <strong>¿Seguro que quieres eliminar el Cargo?</strong>
+    <div *ngIf="globales.operation_success; else elseBlock" class="text-right">
+        <button class="btn btn-secondary mr-1 ml-2" routerLink="/cargo"><i class="fas fa-user-friends"></i> Listarlos a todos</button>
+        <button class="btn btn-success ml-1" routerLink="/"><i class="fas fa-desktop"></i> Volver al Inicio</button>
+    </div>
+    <ng-template #elseBlock>
+        <button class="btn btn-secondary mr-1 ml-2" routerLink="/cargo"><i class="fas fa-ban"></i> No</button>
+        <button class="btn btn-danger ml-1" (click)="delete()"><i class="fas fa-check"></i> Si</button>
+    </ng-template>
+  </div>
+  <!-- Spinner mientras se procesa petición -->
+<div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        Procesando solicitud...
+    </button>
+</div>
+<app-errores></app-errores>

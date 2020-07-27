@@ -1,0 +1,21 @@
+<app-errores></app-errores>
+<!-- Formulario para Tipo de Cargo -->
+<div class="form-background pl-2 pr-2 pt-2 pb-2 rounded mt-2" *ngIf="!globales.operation_success">
+    <h2 class="mt-2">Datos del Tipo de Cargo</h2>
+    <form>
+        <div class="form-group">
+            <label for="id">Identificador Único</label>
+            <input type="text" class="form-control text-right font-weight-bold " readonly id="id" name="id" [(ngModel)]="unTipo.id" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control text-right" id="nombre" name="nombre" [(ngModel)]="unTipo.nombre" readonly [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="form-group text-right">
+            <button class="btn btn-secondary" data-toggle="modal" data-target="#modalCancelar"><i class="fas fa-ban"></i> Salir</button>
+            <button class="btn btn-danger ml-1 mr-1" [routerLink]="['/tipocargo/delete/', unTipo.id]"><i class="fas fa-trash-alt"></i> Eliminar</button>
+            <button class="btn btn-success" [routerLink]="['/tipocargo/edit/', unTipo.id]"><i class="fas fa-pen-square"></i> Editar</button>
+        </div>
+      </form>
+</div>
+<app-back-home></app-back-home>

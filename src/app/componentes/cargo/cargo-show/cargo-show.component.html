@@ -1,0 +1,37 @@
+<app-errores></app-errores>
+<!-- Formulario para Cargo -->
+<div class="form-background pl-2 pr-2 pt-2 pb-2 rounded mt-2" *ngIf="!globales.operation_success">
+    <h2 class="mt-2">Datos del Cargo</h2>
+    <form>
+        <div class="form-group">
+            <label for="id">Identificador Único</label>
+            <input type="text" class="form-control text-right font-weight-bold " readonly id="id" name="id" [(ngModel)]="unCargo.id" [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" class="form-control text-right" id="cantidad" name="cantidad" [(ngModel)]="unCargo.cantidad" readonly [ngModelOptions]="{standalone: true}">
+        </div>
+        <div class="form-group">
+            <label for="tipoCargo">Tipo de Cargo</label>
+
+            <select class="form-control" id="tipoCargo" name="tipoCargo" [(ngModel)]="unCargo.tipoCargo.id" [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let unTipoCargo of tiposCargos" value="{{unTipoCargo.id}}">{{unTipoCargo.nombre}}</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="tipoEntidad">Tipo de Entidad</label>
+
+            <select class="form-control" id="tipoEntidad" name="tipoEntidad" [(ngModel)]="unCargo.tipoEntidad.id" [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let unTipoEntidad of tiposEntidades" value="{{unTipoEntidad.id}}">{{unTipoEntidad.nombre}}</option>
+            </select>
+
+        </div>
+        <div class="form-group text-right">
+            <button class="btn btn-secondary" data-toggle="modal" data-target="#modalCancelar"><i class="fas fa-ban"></i> Salir</button>
+            <button class="btn btn-danger ml-1 mr-1" [routerLink]="['/cargo/delete/', unCargo.id]"><i class="fas fa-trash-alt"></i> Eliminar</button>
+            <button class="btn btn-success" [routerLink]="['/cargo/edit/', unCargo.id]"><i class="fas fa-pen-square"></i> Editar</button>
+        </div>
+      </form>
+</div>
+<app-back-home></app-back-home>

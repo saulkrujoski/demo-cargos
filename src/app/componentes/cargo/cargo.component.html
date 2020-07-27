@@ -1,0 +1,64 @@
+<!-- Area para añadir un nuevo Cargo -->
+<div class="alert alert-primary mt-2 row" role="alert">
+    <p class="col-10">¿Quieres añadir un nuevo Cargo? puedes hacerlo con la siguiente opción</p>
+    <div class="col-2">
+      <button class="btn btn-primary ml-1 mr-1" routerLink="/cargo/new"><i class="fas fa-plus-square"></i> Nuevo</button>
+    </div>
+</div>
+  
+  <!-- Spinner mientras se recuperan los cargos -->
+  <div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Recuperando la lista de Cargos...
+    </button>
+  </div>
+  
+  <!-- Si se detectan errores, se listarán aquí  -->
+  <app-errores></app-errores>
+  
+  <!-- Tabla de Cargos registrados -->
+  <div *ngIf="cargos">
+    <h3>Listado de Cargos:</h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Tipo de Cargo</th>
+            <th scope="col">Tipo de Entidad</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let unCargo of cargos">
+            <td scope="row" class="text-center">{{unCargo.id}}</td>
+            <td class="text-center">{{unCargo.cantidad}}</td>
+            <td>{{unCargo.tipoCargo.nombre}}</td>
+            <td>{{unCargo.tipoEntidad.nombre}}</td>
+            <div *ngIf="unCargo.estado; then thenBlockEstado else elseBlockEstado"></div>
+            <ng-template #thenBlockEstado>
+              <td class="alert-success text-center">Habilitado</td>
+            </ng-template>
+            <ng-template #elseBlockEstado>
+              <td class="alert-danger text-center">Inhabitado</td>
+            </ng-template>
+            <td class="text-center">
+              <a class="btn btn-primary" href="#" [routerLink]="['/cargo/show/', unCargo.id]" role="button"><i class="fas fa-eye"></i></a>
+              <a class="btn btn-success ml-1 mr-1" href="#" [routerLink]="['/cargo/edit/', unCargo.id]" role="button"><i class="fas fa-pen-square"></i></a>
+              
+              <div *ngIf="unCargo.estado; then thenBlockDelete else elseBlockDelete"></div>
+              <ng-template #thenBlockDelete>
+                <a class="btn btn-danger" href="#" [routerLink]="['/cargo/delete/', unCargo.id]" role="button"><i class="fas fa-trash-alt"></i></a>
+              </ng-template>
+              <ng-template #elseBlockDelete>
+                <a class="btn btn-danger disabled" href="#" [routerLink]="['/cargo/delete/', unCargo.id]" role="button"><i class="fas fa-trash-alt"></i></a>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

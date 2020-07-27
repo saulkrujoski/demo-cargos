@@ -1,0 +1,54 @@
+<!-- Area para añadir un nuevo Tipo de Cargo -->
+<div class="alert alert-primary mt-2 row" role="alert">
+    <p class="col-10">¿Quieres añadir un nuevo Tipo de Cargo? puedes hacerlo con la siguiente opción</p>
+    <div class="col-2">
+      <button class="btn btn-primary ml-1 mr-1" routerLink="/tipocargo/new"><i class="fas fa-plus-square"></i> Nuevo</button>
+    </div>
+</div>
+  
+  <!-- Spinner mientras se recuperan los tipos de tipocargo -->
+  <div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Recuperando la lista de Tipos de Cargo...
+    </button>
+  </div>
+  
+  <!-- Si se detectan errores, se listarán aquí  -->
+  <app-errores></app-errores>
+  
+  <!-- Tabla de Tipos de Cargo registrados -->
+  <div *ngIf="tipos">
+    <h3>Listado de Tipos de Cargos:</h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let unTipo of tipos">
+            <td scope="row" class="text-center">{{unTipo.id}}</td>
+            <td>{{unTipo.nombre}}</td>
+
+            <td class="text-center">
+              <a class="btn btn-primary" href="#" [routerLink]="['/tipocargo/show/', unTipo.id]" role="button"><i class="fas fa-eye"></i></a>
+              <a class="btn btn-success ml-1 mr-1" href="#" [routerLink]="['/tipocargo/edit/', unTipo.id]" role="button"><i class="fas fa-pen-square"></i></a>
+              
+              <div *ngIf="unTipo.estado; then thenBlockDelete else elseBlockDelete"></div>
+              <ng-template #thenBlockDelete>
+                <a class="btn btn-danger" href="#" [routerLink]="['/tipocargo/delete/', unTipo.id]" role="button"><i class="fas fa-trash-alt"></i></a>
+              </ng-template>
+              <ng-template #elseBlockDelete>
+                <a class="btn btn-danger disabled" href="#" [routerLink]="['/tipocargo/delete/', unTipo.id]" role="button"><i class="fas fa-trash-alt"></i></a>
+              </ng-template>
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
