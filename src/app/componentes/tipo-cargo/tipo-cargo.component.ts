@@ -3,6 +3,7 @@ import { TipoCargo } from 'src/app/modelo/tipo-cargo';
 import { Observable } from 'rxjs';
 import { ServicioTipoCargoService } from '../../servicios/servicio-tipo-cargo.service';
 import { Globales } from '../../../globales';
+import { TipoCargoMensajes } from '../tipo-cargo/mensajes';
 
 @Component({
   selector: 'app-tipo-cargo',
@@ -12,13 +13,9 @@ import { Globales } from '../../../globales';
 })
 export class TipoCargoComponent implements OnInit {
   loading: boolean = false;
-  // inicializado únicamente para las pruebas offline
-  tipos: TipoCargo[] = [
-    {id:1, nombre:'Un Tipo Cargo 1'},
-    {id:2, nombre:'Un Tipo Cargo 2'}
-  ];
+  tipos: Observable<TipoCargo[]>;
 
-  constructor(private servicio: ServicioTipoCargoService, public globales: Globales) { }
+  constructor(private servicio: ServicioTipoCargoService, public globales: Globales, private mensajes: TipoCargoMensajes) { }
 
   ngOnInit(): void {
     this.globales.reload();
@@ -28,11 +25,16 @@ export class TipoCargoComponent implements OnInit {
       result => {
         this.loading = false;
         this.tipos = result;
+        if( this.tipos == null ){
+          this.globales.operation_danger = true;
+          this.globales.danger_mensaje = this.mensajes.msjs_list_not_ok;
+          return;
+        }
       },
       error => {
         this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos para recuperar la lista de Tipos de Cargo. El estado devuelto es (' + error['status'] + ').';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
   }

@@ -81,7 +81,6 @@ export class CargoShowComponent implements OnInit {
         if( this.unCargo == null ){
           this.globales.operation_danger = true;
           this.globales.danger_mensaje = this.mensajes.msjs_not_exist;
-          return;
         }
       },
       error => {

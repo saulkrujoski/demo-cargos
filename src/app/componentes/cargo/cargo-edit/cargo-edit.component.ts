@@ -112,7 +112,6 @@ export class CargoEditComponent implements OnInit {
   }
 
   guardar():void{
-    console.log('Antes de guardar el formualrio: ', this.unCargo);
     this.globales.reload();
     this.loading = true;
     // validación del formulario
@@ -128,12 +127,12 @@ export class CargoEditComponent implements OnInit {
       result => {
         this.loading = false;
         this.globales.operation_success = true;
-        this.globales.success_mensaje = 'Cargo modificado exitosamente.';
+        this.globales.success_mensaje = this.mensajes.msjs_update;
       },
       error => {
         this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos.';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
   }

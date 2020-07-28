@@ -14,7 +14,7 @@ import { Cargo } from 'src/app/modelo/cargo';
 })
 export class CargoDeleteComponent implements OnInit {
   private clave: string;
-  loading: boolean;
+  loading: boolean = false;
 
   constructor(private rutaActiva: ActivatedRoute, private router: Router, private servicio: ServicioCargoService, public globales: Globales, private mensajes: CargoMensajes) { }
 
