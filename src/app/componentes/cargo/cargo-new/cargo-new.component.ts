@@ -29,6 +29,7 @@ export class CargoNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.globales.reload();
     this.loading = true;
     // aquí cargar los tipos de cargos
     this.servicioTiposCargos.getAll().subscribe(

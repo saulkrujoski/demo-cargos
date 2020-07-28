@@ -1,4 +1,12 @@
-<!-- Vista para eliminar a un Tipo de Cargo -->
+<!-- Spinner mientras se recuperan los datos -->
+<div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Recuperando datos...
+    </button>
+  </div>
+  
+<!-- Vista para eliminar a un Tipo de Entidad -->
 <div class="alert alert-warning mt-2" role="alert">
     <strong>¿Seguro que quieres eliminar el Tipo de Entidad?</strong>
     <div *ngIf="globales.operation_success; else elseBlock" class="text-right">
