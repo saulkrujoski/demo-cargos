@@ -9,6 +9,9 @@ import { ServicioTipoCargoService } from '../../../servicios/servicio-tipo-cargo
 import { ServicioTipoEntidadService } from '../../../servicios/servicio-tipo-entidad.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CargoMensajes } from '../mensajes';
+import { TipoCargoMensajes } from '../../tipo-cargo/mensajes';
+import { TipoEntidadMensajes } from '../../tipo-entidad/mensajes';
 
 @Component({
   selector: 'app-cargo-edit',
@@ -17,37 +20,34 @@ import { Observable } from 'rxjs';
   providers: [ServicioCargoService, ServicioTipoCargoService, ServicioTipoEntidadService]
 })
 export class CargoEditComponent implements OnInit {
-  // Datos inicializados para pruebas offline
-  unCargo: Cargo = {id:1, cantidad: 5, tipoCargo: {id: 1, nombre: 'Un tipo cargo'}, tipoEntidad: {id:1, nombre: 'Un tipo entidad'}};
+  unCargo: Cargo = {id: 0, tipoCargo: {id: 0, nombre: '', estado: false}, tipoEntidad: {id:0 , nombre: '', estado: false}, estado: false};
   public miFormulario: FormGroup;
   private clave: string;
-  
-  // inicializado únicamente para las pruebas offline
-  tiposCargos: TipoCargo[] = [
-    {id: 1, nombre: 'Tipo de Cargo 1', estado: true},
-    {id: 2, nombre: 'Tipo de Cargo 2', estado: true},
-    {id: 3, nombre: 'Tipo de Cargo 3', estado: true}
-  ];
+  loading = false;
+  tiposCargos: Observable<TipoCargo[]>;
+  tiposEntidades: Observable<TipoEntidad[]>;
 
-  tiposEntidades: TipoEntidad[] = [
-    {id: 1, nombre: 'Tipo de Entidad 1', estado: true},
-    {id: 2, nombre: 'Tipo de Entidad 2', estado: true},
-    {id: 3, nombre: 'Tipo de Entidad 3', estado: true}
-  ];
-
-  constructor(private rutaActiva: ActivatedRoute,private servicio: ServicioCargoService,private servicioTiposCargos: ServicioTipoCargoService,private servicioTipoEntidad: ServicioTipoEntidadService, public globales: Globales) {}
+  constructor(private rutaActiva: ActivatedRoute,private servicio: ServicioCargoService,private servicioTiposCargos: ServicioTipoCargoService,private servicioTipoEntidad: ServicioTipoEntidadService, public globales: Globales, public mensajes: CargoMensajes, public mensajesTipoCargo: TipoCargoMensajes, public mensajesTipoEntidad: TipoEntidadMensajes) {}
 
   ngOnInit(): void {
-    console.log(this.unCargo);
+    this.globales.reload();
     this.buildForm();
+    this.loading = true;
     // aquí cargar los tipos de cargos
     this.servicioTiposCargos.getAll().subscribe(
       result => {
           this.tiposCargos = result;
+          this.loading = false;
+          if( this.tiposCargos == null ){
+            this.globales.operation_danger = true;
+            this.globales.danger_mensaje = this.mensajesTipoCargo.msjs_list_not_ok;
+            return;
+          }
       },
       error => {
+        this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos para recuperar la lista de Tipos de Cargo. El estado devuelto es (' + error['status'] + ').';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
 
@@ -55,29 +55,43 @@ export class CargoEditComponent implements OnInit {
     this.servicioTipoEntidad.getAll().subscribe(
       result => {
           this.tiposEntidades = result;
+          this.loading = false;
+          if( this.tiposEntidades == null ){
+            this.globales.operation_danger = true;
+            this.globales.danger_mensaje = this.mensajesTipoEntidad.msjs_list_not_ok;
+            return;
+          }
       },
       error => {
+        this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos para recuperar la lista de Tipos de Cargo. El estado devuelto es (' + error['status'] + ').';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
 
-    // Aquí se recuperan los datos del objeto
     this.rutaActiva.params.subscribe(
       (params: Params) => {
         this.clave = params.id;
       }
     );
+    
+    // Recuperamos al objeto
     this.servicio.getOne(this.clave).subscribe(
       result => {
-          this.unCargo = result;
+        this.unCargo = result;
+        this.loading = false;
+        if( this.unCargo == null ){
+          this.globales.operation_danger = true;
+          this.globales.danger_mensaje = this.mensajes.msjs_not_exist;
+          return;
+        }
       },
       error => {
+        this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos.';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
-
   }
 
   // Controles para los formularios
@@ -98,23 +112,29 @@ export class CargoEditComponent implements OnInit {
   }
 
   guardar():void{
-    console.log('Antes de guardar el formualrio: ', this.miFormulario.value);
+    console.log('Antes de guardar el formualrio: ', this.unCargo);
     this.globales.reload();
+    this.loading = true;
     // validación del formulario
-    if( this.miFormulario.valid ){
-      this.servicio.update(this.miFormulario.value).subscribe(
-        result => {
-          this.globales.operation_success = true;
-          this.globales.success_mensaje = 'Cargo nuevo modificado exitosamente.';
-        },
-        error => {
-          this.globales.operation_danger = true;
-          this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos.';
-        }
-      );
-    }else{
+    if( !this.miFormulario.valid ){
+      this.loading = false;
       this.globales.operation_danger = true;
-      this.globales.danger_mensaje = 'Algo ocurrio con la validación del formulario, revisa los mensajes para cada campo.';
+      this.globales.danger_mensaje = this.globales.form_validation_fail;
+      return;
     }
+
+    // comprobamos que no exista uno con igual caracteristica (PENDIENTE)
+    this.servicio.update(this.unCargo).subscribe(
+      result => {
+        this.loading = false;
+        this.globales.operation_success = true;
+        this.globales.success_mensaje = 'Cargo modificado exitosamente.';
+      },
+      error => {
+        this.loading = false;
+        this.globales.operation_danger = true;
+        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos.';
+      }
+    );
   }
 }

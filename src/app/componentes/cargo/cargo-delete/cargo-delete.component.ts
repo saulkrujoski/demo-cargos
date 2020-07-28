@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ServicioCargoService } from '../../../servicios/servicio-cargo.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Globales } from '../../../../globales';
+import { CargoMensajes } from '../mensajes';
+import { Cargo } from 'src/app/modelo/cargo';
 
 @Component({
   selector: 'app-cargo-delete',
@@ -14,12 +16,11 @@ export class CargoDeleteComponent implements OnInit {
   private clave: string;
   loading: boolean;
 
-  constructor(private rutaActiva: ActivatedRoute, private router: Router, private servicio: ServicioCargoService, public globales: Globales) { }
+  constructor(private rutaActiva: ActivatedRoute, private router: Router, private servicio: ServicioCargoService, public globales: Globales, private mensajes: CargoMensajes) { }
 
   ngOnInit(): void {}
 
   delete():void {
-    
     this.loading = true;
     this.globales.reload();
     this.rutaActiva.params.subscribe(
@@ -27,17 +28,37 @@ export class CargoDeleteComponent implements OnInit {
         this.clave = params.id;
       }
     );
-    this.servicio.delete(this.clave).subscribe(
+
+    // Comprobaremos si existe
+    let unCargo: Cargo = null;
+    this.servicio.getOne(this.clave).subscribe(
       result => {
-        this.loading = false;
-        this.globales.operation_success = true;
-        this.globales.success_mensaje = 'Cargo eliminado satisfactoriamente.';
-        this.loading = false;
+        unCargo = result;
+        if( unCargo == null ){
+          this.loading = false;
+          this.globales.operation_danger = true;
+          this.globales.danger_mensaje = this.mensajes.msjs_not_exist;
+          return;
+        }
       },
       error => {
         this.loading = false;
         this.globales.operation_danger = true;
-        this.globales.danger_mensaje = 'Ha ocurrido un error durante el intento de conexión con el Servidor de Datos. El estado devuelto es (' + error['status'] + ').';
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
+        return;
+      }
+    );
+    // Ahora si lo eliminaremos
+    this.servicio.delete(this.clave).subscribe(
+      result => {
+        this.loading = false;
+        this.globales.operation_success = true;
+        this.globales.success_mensaje = this.mensajes.msjs_delete;
+      },
+      error => {
+        this.loading = false;
+        this.globales.operation_danger = true;
+        this.globales.danger_mensaje = this.globales.mensaje_servidor_generic_error;
       }
     );
   }

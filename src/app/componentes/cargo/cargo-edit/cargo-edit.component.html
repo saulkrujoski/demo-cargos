@@ -1,4 +1,13 @@
 <app-errores></app-errores>
+
+<!-- Spinner mientras se recuperan los datos -->
+<div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        Procesando solicitud...
+    </button>
+</div>
+
 <!-- Formulario para Cargo -->
 <div class="form-background pl-2 pr-2 pt-2 pb-2 rounded mt-2" *ngIf="!globales.operation_success">
     <h2 class="mt-2">Modificar los Datos del Cargo</h2>

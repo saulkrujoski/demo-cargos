@@ -15,10 +15,12 @@ export class ServicioCargoService {
     return this.http.get<any>(`${environment.API_URI}cargo`);
   }
 
-  getOne(id: string): Observable<any>{return this.http.get(`${environment.API_URI}cargo/${id}`);}
+  getOne(id: string): Observable<any>{
+    return this.http.get(`${environment.API_URI}cargo/${id}`);
+  }
 
   save(object: Cargo): Observable<any>{
-    return this.http.post( `${environment.API_URI}cargo/`,object);
+    return this.http.post( `${environment.API_URI}cargo`,object);
   }
 
   delete(id: string): Observable<any>{return this.http.delete(`${environment.API_URI}cargo/${id}`);}

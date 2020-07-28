@@ -1,4 +1,13 @@
 <app-errores></app-errores>
+
+<!-- Spinner mientras se recuperan los datos -->
+<div class="text-center mt-2" *ngIf="loading">
+    <button class="btn btn-primary" type="button" disabled>
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      Recuperando datos...
+    </button>
+  </div>
+
 <!-- Formulario para Cargo -->
 <div class="form-background pl-2 pr-2 pt-2 pb-2 rounded mt-2" *ngIf="!globales.operation_success">
     <h2 class="mt-2">Datos del Cargo</h2>
@@ -14,7 +23,7 @@
         <div class="form-group">
             <label for="tipoCargo">Tipo de Cargo</label>
 
-            <select class="form-control" id="tipoCargo" name="tipoCargo" [(ngModel)]="unCargo.tipoCargo.id" [ngModelOptions]="{standalone: true}">
+            <select class="form-control" readonly id="tipoCargo" name="tipoCargo" [(ngModel)]="unCargo.tipoCargo.id" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let unTipoCargo of tiposCargos" value="{{unTipoCargo.id}}">{{unTipoCargo.nombre}}</option>
             </select>
 
@@ -22,7 +31,7 @@
         <div class="form-group">
             <label for="tipoEntidad">Tipo de Entidad</label>
 
-            <select class="form-control" id="tipoEntidad" name="tipoEntidad" [(ngModel)]="unCargo.tipoEntidad.id" [ngModelOptions]="{standalone: true}">
+            <select class="form-control" readonly id="tipoEntidad" name="tipoEntidad" [(ngModel)]="unCargo.tipoEntidad.id" [ngModelOptions]="{standalone: true}">
                 <option *ngFor="let unTipoEntidad of tiposEntidades" value="{{unTipoEntidad.id}}">{{unTipoEntidad.nombre}}</option>
             </select>
 
